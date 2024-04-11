@@ -5,7 +5,7 @@ gestionar la información de sus clientes, de las motos y de las ventas realizad
 información de todos sus clientes, de cada unas de las motos disponibles en el local y de todas las ventas
 realizadas.
 
-##Implementar las siguientes clases y sus respectivos metodos
+# Implementar las siguientes clases y sus respectivos metodos
 **Cliente**
 0. Atributos:  nombre, apellido, si está o no dado de baja, el tipo y el número de documento.
 1. Método constructor.
@@ -23,7 +23,7 @@ Si la moto no se encuentra disponible para la venta retorna un valor < 0. Si la 
 la venta, el método realiza el siguiente cálculo:
 $_venta = $_compra + $_compra * (anio * por_inc_anual)
 
-**Venta**
+*Venta*
 1. Atributos: número, fecha, referencia al cliente, referencia a una colección de motos y el precio final.
 2. Método constructor.
 3. Los métodos de acceso de cada uno de los atributos de la clase.
