@@ -7,10 +7,10 @@ realizadas.
 
 # Implementar las siguientes clases y sus respectivos metodos
 **Cliente**
-0. *Atributos*:  nombre, apellido, si está o no dado de baja, el tipo y el número de documento.
-1. Método constructor.
-2. Los métodos de acceso de cada uno de los atributos de la clase.
-3. Redefinir el método _toString para que retorne la información de los atributos de la clase.
+1. *Atributos*:  nombre, apellido, si está o no dado de baja, el tipo y el número de documento.
+2. Método constructor.
+3. Los métodos de acceso de cada uno de los atributos de la clase.
+4. Redefinir el método _toString para que retorne la información de los atributos de la clase.
 
 **Moto**
 1. *Atributos*: código, costo, año fabricación, descripción, porcentaje incremento anual, activa (atributo que va a contener un valor true, si la moto está disponible para la
