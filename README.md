@@ -18,8 +18,7 @@ venta y false en caso contrario).
 2. Método constructor.
 3. Los métodos de acceso de cada uno de los atributos de la clase.
 4. Redefinir el método toString para que retorne la información de los atributos de la clase.
-5. Implementar el método **darPrecioVenta** el cual calcula el valor por el cual puede ser vendida una moto.
-Si la moto no se encuentra disponible para la venta retorna un valor < 0. Si la moto está disponible para
+5. Implementar el método **darPrecioVenta** el cual calcula el valor por el cual puede ser vendida una moto. Si la moto no se encuentra disponible para la venta retorna un valor < 0. Si la moto está disponible para
 la venta, el método realiza el siguiente cálculo:
 $_venta = $_compra + $_compra * (anio * por_inc_anual)
 
