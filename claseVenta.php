@@ -59,33 +59,29 @@ class Venta {
     }
 
     //metodos
-
-    public function motos(){
-        $result = '';
-        $moto = $this->getObjColeccionMotos();
-        foreach ($moto as $motoActual) {
-            $result .= $motoActual . "\n";
-        }
-        return $result;
-    }
-
     //incorporo el obj moto a la coleccion de motos y seteo el nuevo precio
     public function incorporarMoto($objMoto){
         if ($objMoto->getMotoActiva()) {
             $coleMotos = $this->getObjColeccionMotos();
             array_push($coleMotos,$objMoto);
             $this->SetObjColeccionMotos($coleMotos);
-            $this->SetPrecioFinal($objMoto->darPrecioVenta());
+            $this->SetPrecioFinal($this->getPrecioFinal() + $objMoto->darPrecioVenta());
         }
     }
 
-
-    public function _toString (){
-        $motos = $this->motos();
-        if ($motos === '') {
-           $motos = "Ninguna moto ha sido vendida";
+    public function recorrerMotos ($coleMotos){
+        $result = "";
+        foreach ($coleMotos as $objMotos) {
+            $result .= $objMotos . "\n";
         }
-        return "Numero de venta: " .$this->getNumero() ."\nFecha de venta: " .$this->getObjFecha(). "\nCliente: " .$this->objCliente().
-        "\nColeccion de motos vendidas: " .$motos . "\nPrecio final: " .$this->getPrecioFinal();
+        return $result;
+    }
+
+    public function __toString (){
+        return "Numero de venta: " .$this->getNumero().
+        "\nFecha de venta: " .$this->getObjFecha().
+         "\nCliente: " .$this->getObjCliente().
+        "\nColeccion de motos: ".$this->recorrerMotos($this->getObjColeccionMotos()).
+         "\nPrecio final: " .$this->getPrecioFinal();
     }
 }

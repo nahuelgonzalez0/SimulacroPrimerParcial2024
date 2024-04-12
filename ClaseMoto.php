@@ -5,7 +5,7 @@ class Moto {
     private $anioFabricacion;
     private $descripcion;
     private $porcentajeAnual;
-    private $motoActiva;
+    private $motoActiva; //boolean
 
     //metodo constructor
     public function __construct($codigo,$costo,$anioFabricacion,$descripcion,$porcentajeAnual,$motoActiva){
@@ -71,13 +71,12 @@ class Moto {
     //metodos
 
     public function darPrecioVenta(){
-        $venta = 0;
-        $compraMoto = $this->getCosto();
-        $anioactual = date('Y'); //obtiene el anio actual del sistema en el que se ejecuta el codigo
-        $aniosTranscurridos = $anioactual - $this->getAnioFabricacion();
+        $venta = -1;
         if ($this->getMotoActiva()) {
-            $porcentaje = ($this->getPorcentajeAnual() / 100);
-            $venta = $compraMoto + $compraMoto * ($aniosTranscurridos * $porcentaje);
+            $compraMoto = $this->getCosto();
+            $anioactual = date('Y'); //obtiene el anio actual del sistema en el que se ejecuta el codigo
+            $aniosTranscurridos = $anioactual - $this->getAnioFabricacion();
+            $venta = $compraMoto + $compraMoto * ($aniosTranscurridos * $this->getPorcentajeAnual() / 100);
         }
         return $venta;
     }
@@ -88,11 +87,11 @@ class Moto {
         } else {
             $activa = "Esta disponible";
         }
-        return "Codigo de la moto: " .$this->getCodigo().
+        return "\nCodigo de la moto: " .$this->getCodigo().
         "\nCosto: " .$this->getCosto(). 
         "\nAnio de fabricacion: " .$this->getAnioFabricacion().
         "\nDescripcion: " .$this->getDescripcion(). 
         "\nPorcentaje anual: " .$this->getPorcentajeAnual().
-        "\nLa moto " .$activa;
+        "\nLa moto " .$activa . "\n";
     }
 }

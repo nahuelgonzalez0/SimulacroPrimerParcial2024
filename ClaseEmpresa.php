@@ -62,63 +62,38 @@ class Empresa {
 
     //metodos
 
-    public function imprimirColeccion ($coleccion){
-        $result = "";
-        foreach ($coleccion as $coleccionActual) {
-           $result .= $coleccionActual . "\n";
-        }
-        return $result;
-    }
-
-    public function verificarCole ($coleccion){
-        if ($coleccion = "") {
-            $coleccion = "Esta coleccion esta vacia.";
-        }
-    }
-
-    //retorna el obj moto cuyo codigo coincide con el recibido
     public function retornarMoto($codigoMoto){
         $motoEncontrada = null; // null pq todavia no se encuentra la moto
         $cont = 0;
         $motos= $this->getColeccionMotos();
         $cantMotos = count($motos);
 
-        while ($motoEncontrada === null && $cantMotos>$cont) {
-            if ($motos[$cont]->getCodigo() === $codigoMoto) {
-                $motoEncontrada = $motos[$cont];
+        while ($cont < $cantMotos && $motoEncontrada === null) {
+            $moto = $this->getColeccionMotos()[$cont];
+            if ($moto->getCodigo () == $codigoMoto) {
+                $motoEncontrada = $moto;
             }
             $cont++;
         }
         return $motoEncontrada;
     }
-    
+
     public function registrarVenta($colCodigosMoto, $objCliente){
-        $coleccionVentas = $this->getColeccionVentas();
-        $importeFinal = 0;
-        $fechaActual = date('Y-m-d');
+        $objVenta = new Venta(6, date('Y'),$objCliente, [], 0);  
 
-        if (!$objCliente->getEstado()) {
-            foreach ($colCodigosMoto as $codigoActual) {
-                $moto = $this->retornarMoto($codigoActual);
-
-                if ($moto !== null && $moto->getMotoActiva()) {
-                    
-                    //crea una nueva instancia de Venta con la informacion necesaria
-                    $numeroVenta = count($this->getColeccionVentas())+ 1;
-                    $venta = new Venta ($numeroVenta, $fechaActual,$objCliente, [$moto], 0);
-                    // Suma el costo de la moto al precio final de la venta
-                    $precioVentaMoto =  $moto->darPrecioVenta();
-                    $importeFinal += $precioVentaMoto;
-                    //incorporo la moto a la venta
-                    $venta->incorporarMoto($moto);
-
-                    //incorporo la nueva venta a la coleccion de ventas
-                    $coleccionVentas[] = $venta;
-                    $this->setColeccionVentas($coleccionVentas);
-                }
+        foreach ($colCodigosMoto as $codigoMoto) {
+            $objMotoCod = $this->retornarMoto($codigoMoto);
+            if ($objMotoCod !== null && $objMotoCod->getMotoActiva() && $objCliente->getEstado()) {
+                $objVenta->incorporarMoto($objMotoCod);
             }
         }
-        return $importeFinal;
+
+        //se modifica el arreglo coleccionVentas
+        $coleVentas = $this->getColeccionVentas();
+        array_push($coleVentas,$objVenta);
+        $this->setColeccionVentas($coleVentas);
+
+        return $objVenta->getPrecioFinal();
     }
 
     public function retornarVentasXCliente($tipo,$numDoc){
@@ -126,28 +101,71 @@ class Empresa {
         $ventas = $this->getColeccionVentas();
         foreach ($ventas as $venta) {
             $clienteVenta = $venta->getObjCliente();
-            if ( $clienteVenta->getTipoDoc() === $tipo &&  $clienteVenta->getNumDocumento() === $numDoc ) {
-                //el cliente coincide con lo buscado
-                $ventasCliente[] = $venta; //se almacena la venta en el arreglo
+            if ($clienteVenta->getTipoDoc() === $tipo &&  $clienteVenta->getNumDocumento() === $numDoc ) {
+                //Si el cliente tiene todos esos datos buscados almacenamos la venta.
+                $ventasCliente[] = $venta;
             }
         }
         return $ventasCliente;
     }
 
+    public function listadoClientes (){
+        $clientes = $this->getColeccionClientes();
+        $cant = count($clientes);
+        $result = "";
+
+        for ($i = 0; $i < $cant; $i++) {
+            $clienteActual = $clientes[$i];
+            $result .= $clienteActual . "\n";
+        }
+        return $result;
+    }
+
+    public function listadoMotos (){
+        $motos = $this->getColeccionMotos();
+        $result = "";
+        $cant = count($motos);
+
+        for ($i = 0; $i < $cant; $i++) {
+            $motoActual = $motos[$i];
+            $result .= $motoActual . "\n";
+        }
+        return $result;
+    }
+
+    public function listadoVentas (){
+        $ventas = $this->getColeccionVentas();
+        $cant = count($ventas);
+        $result = "";
+        
+        for ($i = 0; $i < $cant; $i++) {
+            foreach ($ventas[$i] as $venta) {
+                $result .= $venta . "\n";
+            }
+        }
+        return $result;
+    }
+
+    public function listadoVentasCliente($cliente)
+    {
+        $ventasCliente = $this->retornarVentasXCliente($cliente->getTipoDoc(), $cliente->getNumDocumento()); // obtengo los datos acá invocando al metodo retornar. No puedo usar los get fuera de la clase entonces hago la funcion aca. Concateno
+        $result = null;
+
+        if ($ventasCliente != null) {
+            $result = "";
+            foreach ($ventasCliente as $venta) {
+                $result .= $venta . "\n";
+            }
+        }
+        return $result;
+    }
+
     public function __toString(){
-        $coleClientes = $this->imprimirColeccion($this->getColeccionClientes());
-        $coleClientes = $this->verificarCole($coleClientes);
 
-        $coleMotos = $this->imprimirColeccion($this->getColeccionMotos());
-        $coleMotos = $this->verificarCole($coleMotos);
-
-        $coleVentas = $this->imprimirColeccion($this->getColeccionVentas());
-        $coleVentas = $this->verificarCole($coleVentas);
-
-        echo "Denominacion del auto: " .$this->getDenominacionEmpresa(). 
+        return "Denominacion del auto: " .$this->getDenominacionDelAuto(). 
         "\nDireccion: " .$this->getDireccionEmpresa() .
-        "\nClientes: " .$coleClientes.
-        "\nMotos: " .$coleMotos.
-        "\nVentas: " .$coleVentas;
+        "\nLista de clientes: " .$this->listadoClientes().
+        "\nLista de motos: " .$this->listadoMotos().
+        "\nLista de ventas: " .$this->listadoVentas();
     }
 }
